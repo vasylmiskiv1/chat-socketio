@@ -16,21 +16,44 @@ const io = new Server(server, {
   },
 });
 
+let rooms = [];
+
 io.on("connection", (socket) => {
   console.log(`User has successfully connected ${socket.id}`);
 
-  socket.on("join_room", (room) => {
-    socket.join(room);
-    console.log(`User with ID: ${socket.id} has joined room ${room}`);
-  })
+  socket.on("create_room", (roomData) => {
+    socket.join(roomData.roomId);
 
-  socket.on("chat_message", (message) => {
-    console.log(message);
-  })
+    if (!rooms.includes(roomData.roomId)) {
+      rooms.push(roomData.roomId);
+
+      socket.emit("create_room", {
+        status: "201",
+        roomData: {
+          roomId: roomData.roomId,
+          username: roomData.username,
+        },
+      });
+    } else {
+      socket.emit("create_room", {
+        status: "409",
+        message: `Room ${roomData.roomId} already exists`,
+      });
+    }
+
+    console.log(
+      `User with ID: ${socket.id} has joined room ${roomData.roomId}`
+    );
+  });
+
+  socket.on("send_message", (data) => {
+    console.log(data);
+    socket.to(data.room).emit("receive_message", data);
+  });
 
   socket.on("disconnect", () => {
     console.log("User disconnected");
-  })
+  });
 });
 
 server.listen(5000, () => {
