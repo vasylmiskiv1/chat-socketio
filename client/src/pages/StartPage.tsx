@@ -38,8 +38,8 @@ export default function StartPage() {
 
   return (
     <>
-      <div className="flex">
-        <img src={startImage} alt="start" className="h-screen w-4/5" />
+      <div className="flex basis-0">
+        <img src={startImage} alt="start" className="h-screen w-full" />
         <div className="w-full py-40 px-20 text-center flex flex-col items-center">
           <h1 className="text-4xl text-green-800 font-bold">
             Welcome to the Live Chat

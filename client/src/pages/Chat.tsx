@@ -1,50 +1,54 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as io from "socket.io-client";
-
-type ChatProps = {
-  socket: any;
-  username: string;
-  room: string;
-};
+import { setMessage } from "../redux/actions/chatActions";
 
 const socket = io.connect("http://localhost:5000");
 
 export default function Chat() {
-  const [message, setMessage] = useState("");
+  const [writeMessage, setWriteMessage] = useState("");
 
-  const { roomId, userData } = useSelector<any, any>((state) => state.chatRoom);
+  const { roomId, chatMessages, userData } = useSelector<any, any>(
+    (state) => state.chatRoom
+  );
 
-  // const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   if (!chatRoom.length) {
-  //     navigate("/");
-  //   }
-  // }, [chatRoom]);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const sendMessage = async (e: any) => {
     e.preventDefault();
 
-    if (message) {
-      await socket.emit("send_message", {
+    if (writeMessage) {
+      const newMessage = {
+        userId: userData.userId,
         userName: userData.userName,
-        message,
+        message: writeMessage,
         roomId,
         time: `${new Date(Date.now()).getHours()}:${new Date(
           Date.now()
         ).getMinutes()}`,
-      });
+      };
+
+      await socket.emit("send_message", newMessage);
+
+      dispatch(setMessage(newMessage));
     }
 
-    setMessage("");
+    setWriteMessage("");
   };
+
+  // Check if user is logged in if not redirect to login page
+  useEffect(() => {
+    if(!userData.userId) {
+      navigate('/');
+    }
+  }, [])
 
   useEffect(() => {
     if (socket) {
       socket.on("receive_message", (data: any) => {
-        console.log(data);
+        dispatch(setMessage(data));
       });
     }
   }, [socket]);
@@ -68,32 +72,41 @@ export default function Chat() {
         </div> */}
       </div>
       <div className="w-4/6 bg-white p-4">
-        <h1 className="text-2xl bg-purple-100 rounded-lg mx-10 font-medium">
-          {roomId}
-        </h1>
-        <div className="h-[80%] overflow-y-scroll">
-          {/* {messages.map((message: any) => (
-            <div key={message.id} className="bg-green-400 w-[100px] rounded-lg">
-              <p className="text-gray-700">{message.text}</p>
-              <p className="text-gray-500">{message.user.name}</p>
-            </div>
-          ))} */}
+        <div className="h-full relative border-2 bg-blue-100 rounded-lg">
+          <div className="h-[88%] overflow-y-scroll bg-blue-100 rounded-lg">
+          <div className="px-20 py-5 flex flex-col gap-5">
+          {chatMessages.map((message: any) => (
+              <div
+                className={`max-w-[300px] w-full rounded-lg p-4 ${
+                  message.userId === userData.userId
+                    ? `bg-green-400 ml-auto`
+                    : `bg-white`
+                }  `}
+              >
+                <p className="text-lg font-semibold text-left">
+                  {message.userName}
+                </p>
+                <p className="text-gray-500 text-left">{message.message}</p>
+              </div>
+            ))}
+          </div>
+          </div>
+          <form className="absolute bottom-5 w-full flex gap-5 px-5">
+              <input
+                className="w-full bg-input-color p-4 rounded-lg outline-none transition-all focus:bg-white duration-500"
+                type="text"
+                value={writeMessage}
+                onChange={(e) => setWriteMessage(e.target.value)}
+              />
+              <button
+                className="bg-blue-500 text-white rounded-lg min-w-[100px] rounded-full"
+                type="submit"
+                onClick={(e) => sendMessage(e)}
+              >
+                Send
+              </button>
+            </form>
         </div>
-        <form className="w-full flex gap-5 px-10">
-          <input
-            className="w-full bg-gray-200 p-4 rounded-lg"
-            type="text"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-          />
-          <button
-            className="bg-blue-500 text-white rounded-lg min-w-[100px] rounded-full"
-            type="submit"
-            onClick={(e) => sendMessage(e)}
-          >
-            Send
-          </button>
-        </form>
       </div>
       <div>
         <div>
