@@ -17,26 +17,22 @@ export default function StartPage() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    socket.on("create_room", (response: any) => {
-      if (response.status === "201") {
-        const { roomId, username } = response.roomData;
-        dispatch(setRoomId(roomId));
-        dispatch(setUser(username));
-        navigate("/chat");
-      } else if (response.status === "409") {
-        alert(response.message);
-      }
+    socket.on("joined_room", (response: any) => {
+      const { roomId, userData } = response;
+      dispatch(setRoomId(roomId));
+      dispatch(setUser(userData));
+      navigate("/chat");
     });
   }, [socket]);
 
   const joinRoom = () => {
     const roomData = {
-      username,
+      userName: username,
       roomId: room,
     };
 
     if (username && room) {
-      socket.emit("create_room", roomData);
+      socket.emit("join_room", roomData);
     }
   };
 

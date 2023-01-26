@@ -16,43 +16,28 @@ const io = new Server(server, {
   },
 });
 
-let rooms = [];
-
 io.on("connection", (socket) => {
-  console.log(`User has successfully connected ${socket.id}`);
+  // console.log(`User Connected: ${socket.id}`);
 
-  socket.on("create_room", (roomData) => {
-    socket.join(roomData.roomId);
-
-    if (!rooms.includes(roomData.roomId)) {
-      rooms.push(roomData.roomId);
-
-      socket.emit("create_room", {
-        status: "201",
-        roomData: {
-          roomId: roomData.roomId,
-          username: roomData.username,
-        },
-      });
-    } else {
-      socket.emit("create_room", {
-        status: "409",
-        message: `Room ${roomData.roomId} already exists`,
-      });
-    }
-
-    console.log(
-      `User with ID: ${socket.id} has joined room ${roomData.roomId}`
-    );
+  socket.on("join_room", (data) => {
+    socket.join(data.roomId);
+    socket.emit("joined_room", {
+      roomId: data.roomId,
+      userData: {
+        userId: socket.id,
+        userName: data.userName,
+      }
+    });
+    // console.log(`User with ID: ${socket.id} joined room: ${data}`);
   });
 
   socket.on("send_message", (data) => {
-    console.log(data);
-    socket.to(data.room).emit("receive_message", data);
+    console.log(data.roomId);
+    socket.to(data.roomId).emit("receive_message", data.message);
   });
 
   socket.on("disconnect", () => {
-    console.log("User disconnected");
+    console.log("User Disconnected", socket.id);
   });
 });
 

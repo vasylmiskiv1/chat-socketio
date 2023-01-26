@@ -1,11 +1,8 @@
 import { SET_USER, SET_ROOM_ID } from "../actionTypes";
 
 const initialState = {
-  id: "",
-  users: [],
-  messages: [],
-  loading: false,
-  error: null,
+  roomId: "",
+  userData: {},
 };
 
 export function chatRoom(state = initialState, action: any) {
@@ -13,12 +10,12 @@ export function chatRoom(state = initialState, action: any) {
     case SET_USER:
       return {
         ...state,
-        users: [...state.users, {name: action.payload, messages: []}],
+        userData: { ...action.payload, messages: [] },
       };
     case SET_ROOM_ID:
       return {
         ...state,
-        id: action.payload,
+        roomId: action.payload,
       };
     default:
       return state;
