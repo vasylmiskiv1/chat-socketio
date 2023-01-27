@@ -1,5 +1,6 @@
 import {
-  SET_USER,
+  SET_USER_OWNER,
+  UPDATE_CHAT_USERS,
   SET_ROOM_ID,
   SET_MESSAGE,
 } from "../actionTypes";
@@ -11,10 +12,17 @@ export function setRoomId(roomId: string) {
   };
 }
 
-export function setUser(username: any) {
+export function setUserOwner(username: any) {
   return {
-    type: SET_USER,
+    type: SET_USER_OWNER,
     payload: username,
+  };
+}
+
+export function updateChatUsers(users: any) {
+  return {
+    type: UPDATE_CHAT_USERS,
+    payload: users,
   };
 }
 
