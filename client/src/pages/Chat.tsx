@@ -1,15 +1,16 @@
+import moment from "moment";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as io from "socket.io-client";
-import { setMessage } from "../redux/actions/chatActions";
+import { setMessage, updateChatUsers } from "../redux/actions/chatActions";
 
 const socket = io.connect("http://localhost:5000");
 
 export default function Chat() {
   const [writeMessage, setWriteMessage] = useState("");
 
-  const { roomId, chatMessages, userData } = useSelector<any, any>(
+  const { roomId, chatUsers, chatMessages, userData } = useSelector<any, any>(
     (state) => state.chatRoom
   );
 
@@ -25,9 +26,7 @@ export default function Chat() {
         userName: userData.userName,
         message: writeMessage,
         roomId,
-        time: `${new Date(Date.now()).getHours()}:${new Date(
-          Date.now()
-        ).getMinutes()}`,
+        time: moment().format('lll'),
       };
 
       await socket.emit("send_message", newMessage);
@@ -38,12 +37,14 @@ export default function Chat() {
     setWriteMessage("");
   };
 
-  // Check if user is logged in if not redirect to login page
   useEffect(() => {
     if(!userData.userId) {
       navigate('/');
     }
-  }, [])
+    socket.on("update_room_users", (data) => {
+      updateChatUsers(data.chatUsers);
+    })
+  }, [socket])
 
   useEffect(() => {
     if (socket) {
@@ -54,39 +55,45 @@ export default function Chat() {
   }, [socket]);
 
   useEffect(() => {
-    socket.on("join_room", (data) => {
-      console.log(data);
-    });
+    socket.on("someone_joined_room", (data: any) => {
+      console.log(data.chatUsers);
+      dispatch(updateChatUsers(data.chatUsers));
+    })
   }, [socket]);
 
   return (
     <div className="flex h-screen text-center">
       <div className="w-1/6 bg-gray-200">
-        {/* <div className="p-4">
+        <div className="p-4">
           <h1 className="text-lg font-medium">Users</h1>
           <ul>
-            {users.map((user: any) => (
-              <li key={user.id}>{user.name}</li>
+            {chatUsers.map((user: any) => (
+              <li key={user.userId}>{user.userName}</li>
             ))}
           </ul>
-        </div> */}
+        </div>
       </div>
       <div className="w-4/6 bg-white p-4">
         <div className="h-full relative border-2 bg-blue-100 rounded-lg">
           <div className="h-[88%] overflow-y-scroll bg-blue-100 rounded-lg">
-          <div className="px-20 py-5 flex flex-col gap-5">
-          {chatMessages.map((message: any) => (
+          <div className="px-10 py-5 flex flex-col gap-5">
+          {chatMessages.map((message: any, i: number) => (
               <div
+              key={i}
                 className={`max-w-[300px] w-full rounded-lg p-4 ${
                   message.userId === userData.userId
                     ? `bg-green-400 ml-auto`
                     : `bg-white`
                 }  `}
               >
-                <p className="text-lg font-semibold text-left">
+                <div className="flex text-lg gap-4">
+                <p className="bg-red-200 rounded-full p-1 w-[35px] h-[35px]"></p>
+                <p className="font-semibold">
                   {message.userName}
                 </p>
-                <p className="text-gray-500 text-left">{message.message}</p>
+                </div>
+                <p className="text-gray-500 mt-2 text-left">{message.message}</p>
+                <p className="text-gray-500 text-right">{message.time}</p>
               </div>
             ))}
           </div>

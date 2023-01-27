@@ -4,7 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 import startImage from "../assets/start-image.jpg";
-import { setRoomId, setUser } from "../redux/actions/chatActions";
+import {
+  setRoomId,
+  updateChatUsers,
+  setUserOwner,
+} from "../redux/actions/chatActions";
 
 const socket = io.connect("http://localhost:5000");
 
@@ -20,7 +24,10 @@ export default function StartPage() {
     socket.on("joined_room", (response: any) => {
       const { roomId, userData } = response;
       dispatch(setRoomId(roomId));
-      dispatch(setUser(userData));
+
+      dispatch(setUserOwner(userData));
+      dispatch(updateChatUsers([{ ...userData }]));
+
       navigate("/chat");
     });
   }, [socket]);

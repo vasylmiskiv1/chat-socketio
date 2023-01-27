@@ -16,18 +16,30 @@ const io = new Server(server, {
   },
 });
 
+const chatUsers = [];
+
 io.on("connection", (socket) => {
   console.log(`User Connected: ${socket.id}`);
 
   socket.on("join_room", (data) => {
+    const userData = { userName: data.userName, userId: socket.id };
+
+    chatUsers.push(userData);
+
     socket.join(data.roomId);
     socket.emit("joined_room", {
       roomId: data.roomId,
-      userData: {
-        userId: socket.id,
-        userName: data.userName,
-      }
+      userData,
     });
+    socket.broadcast.emit("someone_joined_room", {
+      roomId: data.roomId,
+      chatUsers,
+    });
+
+    socket.broadcast.emit("update_room_users", {
+      roomId: data.roomId,
+      chatUsers,
+    })
     // console.log(`User with ID: ${socket.id} joined room: ${data}`);
   });
 
@@ -35,8 +47,6 @@ io.on("connection", (socket) => {
     console.log(data.roomId);
     socket.broadcast.emit("receive_message", data);
   });
-
-  
 
   socket.on("disconnect", () => {
     console.log("User Disconnected", socket.id);
