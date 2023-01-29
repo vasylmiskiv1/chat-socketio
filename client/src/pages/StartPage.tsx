@@ -6,8 +6,8 @@ import { useDispatch } from "react-redux";
 import startImage from "../assets/start-image.jpg";
 import {
   setRoomId,
-  updateChatUsers,
-  setUserOwner,
+  setClientUserData,
+  getChatUsers,
 } from "../redux/actions/chatActions";
 
 const socket = io.connect("http://localhost:5000");
@@ -22,11 +22,11 @@ export default function StartPage() {
 
   useEffect(() => {
     socket.on("joined_room", (response: any) => {
-      const { roomId, userData } = response;
-      dispatch(setRoomId(roomId));
+      const { roomId, userData, chatUsers } = response;
 
-      dispatch(setUserOwner(userData));
-      dispatch(updateChatUsers([{ ...userData }]));
+      dispatch(setRoomId(roomId));
+      dispatch(setClientUserData(userData));
+      dispatch(getChatUsers(chatUsers));
 
       navigate("/chat");
     });

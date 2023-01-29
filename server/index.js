@@ -16,10 +16,10 @@ const io = new Server(server, {
   },
 });
 
-const chatUsers = [];
+let chatUsers = [];
 
 io.on("connection", (socket) => {
-  console.log(`User Connected: ${socket.id}`);
+  // console.log(`User Connected: ${socket.id}`);
 
   socket.on("join_room", (data) => {
     const userData = { userName: data.userName, userId: socket.id };
@@ -27,24 +27,33 @@ io.on("connection", (socket) => {
     chatUsers.push(userData);
 
     socket.join(data.roomId);
+
     socket.emit("joined_room", {
       roomId: data.roomId,
+      chatUsers,
       userData,
     });
+
     socket.broadcast.emit("someone_joined_room", {
       roomId: data.roomId,
       chatUsers,
     });
+  });
 
-    socket.broadcast.emit("update_room_users", {
-      roomId: data.roomId,
-      chatUsers,
-    })
-    // console.log(`User with ID: ${socket.id} joined room: ${data}`);
+  socket.on("change__username", (data) => {
+    chatUsers = [...chatUsers.map((user) =>
+      user.userId === data.userId ? { ...user, userName: data.userName } : user
+    )];
+
+    const updatedUser = {
+      userId: data.userId,
+      userName: data.userName,
+    };
+
+    socket.broadcast.emit("someone_changed_username", updatedUser);
   });
 
   socket.on("send_message", (data) => {
-    console.log(data.roomId);
     socket.broadcast.emit("receive_message", data);
   });
 
