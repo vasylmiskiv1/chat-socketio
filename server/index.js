@@ -2,8 +2,10 @@ const express = require("express");
 
 const app = express();
 const http = require("http");
-const path = require('path');
+const path = require("path");
 const cors = require("cors");
+require("dotenv").config();
+
 const { Server } = require("socket.io");
 
 app.use(cors());
@@ -12,8 +14,8 @@ const __rootdir = path.resolve();
 
 app.use(express.static(path.join(__rootdir, "/client/build")));
 
-app.get('/', (req, res) => {
-  res.sendFile(path.resolve(__rootdir, "client", "build", "index.html"))
+app.get("/", (req, res) => {
+  res.sendFile(path.resolve(__rootdir, "client", "build", "index.html"));
 });
 
 const server = http.createServer(app);
@@ -28,9 +30,10 @@ const io = new Server(server, {
 let chatUsers = [];
 
 io.on("connection", (socket) => {
-  // console.log(`User Connected: ${socket.id}`);
+  console.log(`User Connected: ${socket.id}`);
 
   socket.on("join_room", (data) => {
+    console.log(data);
     const userData = { userName: data.userName, userId: socket.id };
 
     chatUsers.push(userData);
@@ -50,9 +53,13 @@ io.on("connection", (socket) => {
   });
 
   socket.on("change__username", (data) => {
-    chatUsers = [...chatUsers.map((user) =>
-      user.userId === data.userId ? { ...user, userName: data.userName } : user
-    )];
+    chatUsers = [
+      ...chatUsers.map((user) =>
+        user.userId === data.userId
+          ? { ...user, userName: data.userName }
+          : user
+      ),
+    ];
 
     const updatedUser = {
       userId: data.userId,
@@ -67,10 +74,12 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    console.log("User Disconnected", socket.id);
+    chatUsers = chatUsers.filter((chatUser) => chatUser.userId !== socket.id);
+
+    socket.broadcast.emit("someone_disconnected", socket.id);
   });
 });
 
-server.listen(5000, () => {
-  console.log("Server running on port 5000");
+server.listen(process.env.SERVER_PORT || 5000, () => {
+  console.log(`Server running on port ${process.env.SERVER_PORT || 5000}`);
 });

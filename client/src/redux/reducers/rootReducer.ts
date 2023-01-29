@@ -4,6 +4,7 @@ import {
   SET_ROOM_ID,
   GET_CHAT_USERS,
   UPDATE_CHAT_USERS,
+  REMOVE_USER_FROM_CHAT,
   SET_MESSAGE,
 } from "../constants";
 
@@ -53,6 +54,12 @@ export function chatRoom(state = initialState, action: any) {
           chatUser.userId === action.payload.userId ? action.payload : chatUser
         ),
       };
+
+    case REMOVE_USER_FROM_CHAT:
+      return {
+        ...state,
+        chatUsers: state.chatUsers.filter((chatUser: any) => chatUser.userId!== action.payload),
+      }
 
     case SET_MESSAGE:
       return {

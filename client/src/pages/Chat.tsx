@@ -12,12 +12,13 @@ import { FaRegSmileBeam } from "react-icons/fa";
 
 import {
   getChatUsers,
+  removeUserFromChat,
   setMessage,
   updateChatUsers,
   updateClientUserName,
 } from "../redux/actions/chatActions";
 
-const socket = io.connect("http://localhost:5000");
+import { socket } from "../service/socket";
 
 export default function Chat() {
   const [writeMessage, setWriteMessage] = useState("");
@@ -81,6 +82,10 @@ export default function Chat() {
     socket.on("someone_changed_username", (updatedUser: any) => {
       dispatch(updateChatUsers(updatedUser));
     });
+
+    socket.on("someone_disconnected", (userId: any) => {
+      dispatch(removeUserFromChat(userId));
+    })
   }, [socket]);
 
   const messagesEndRef = useRef<null | HTMLDivElement>(null);

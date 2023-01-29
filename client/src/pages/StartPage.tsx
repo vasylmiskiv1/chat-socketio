@@ -1,4 +1,3 @@
-import * as io from "socket.io-client";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -10,7 +9,7 @@ import {
   getChatUsers,
 } from "../redux/actions/chatActions";
 
-const socket = io.connect("http://localhost:5000");
+import { socket } from "../service/socket";
 
 export default function StartPage() {
   const [username, setUsername] = useState("");

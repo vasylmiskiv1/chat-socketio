@@ -3,6 +3,7 @@ import {
   UPDATE_CLIENT_USER_NAME,
   UPDATE_CHAT_USERS,
   SET_ROOM_ID,
+  REMOVE_USER_FROM_CHAT,
   GET_CHAT_USERS,
   SET_MESSAGE,
 } from "../constants";
@@ -48,5 +49,12 @@ export function setMessage(message: any) {
     type: SET_MESSAGE,
     payload: message,
   };
+}
+
+export function removeUserFromChat (userId: string) {
+  return {
+    type: REMOVE_USER_FROM_CHAT,
+    payload: userId,
+  }
 }
 
