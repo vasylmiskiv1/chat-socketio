@@ -2,16 +2,25 @@ const express = require("express");
 
 const app = express();
 const http = require("http");
+const path = require('path');
 const cors = require("cors");
 const { Server } = require("socket.io");
 
 app.use(cors());
 
+const __rootdir = path.resolve();
+
+app.use(express.static(path.join(__rootdir, "/client/build")));
+
+app.get('/', (req, res) => {
+  res.sendFile(path.resolve(__rootdir, "client", "build", "index.html"))
+});
+
 const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "*",
     methods: ["GET", "POST"],
   },
 });
