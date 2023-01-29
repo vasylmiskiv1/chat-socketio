@@ -12,6 +12,7 @@
     "@types/react-dom": "^18.0.10",
     "@types/react-redux": "^7.1.25",
     "@types/socket.io": "^3.0.2",
+    "chatsocketio": "file:..",
     "emoji-picker-react": "^4.4.7",
     "moment": "^2.29.4",
     "react": "^18.2.0",
