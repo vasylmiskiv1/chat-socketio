@@ -1,0 +1,15 @@
+// log in
+export const SET_CLIENT_USER_DATA = 'SET_CLIENT_USER_DATA';
+export const GET_CHAT_USERS = 'GET_CHAT_USERS';
+
+// if room has been created
+export const SET_ROOM_ID = 'SET_ROOM_ID';
+
+// someone joined a chat
+export const UPDATE_CLIENT_USER_NAME = 'UPDATE_CLIENT_USER_NAME';
+
+// someone changed username
+export const UPDATE_CHAT_USERS = 'UPDATE_CHAT_USERS';
+
+// send a message
+export const SET_MESSAGE = 'SET_MESSAGE';
