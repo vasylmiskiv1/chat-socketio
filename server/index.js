@@ -14,7 +14,7 @@ const __rootdir = path.resolve();
 
 app.use(express.static(path.join(__rootdir, "/client/build")));
 
-app.get("/", (req, res) => {
+app.get("*", (req, res) => {
   res.sendFile(path.resolve(__rootdir, "client", "build", "index.html"));
 });
 
