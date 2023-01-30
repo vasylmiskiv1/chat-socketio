@@ -1,6 +1,13 @@
-interface ActionReducer {
-    type: string;
-    payload: any;
+interface State {
+  roomId: string;
+  chatUsers: User[];
+  chatMessages: Message[];
+  userData: {};
+}
+
+interface Action {
+  type: string;
+  payload: any;
 }
 
 interface User {

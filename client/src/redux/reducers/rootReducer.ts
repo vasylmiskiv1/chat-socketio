@@ -9,14 +9,14 @@ import {
   USER_CLIENT_LOGOUT,
 } from "../constants";
 
-const initialState = {
-  roomId: "",
-  chatUsers: [] as any,
+const initialState: State = {
+  roomId: "1",
+  chatUsers: [],
   chatMessages: [],
   userData: {},
 };
 
-export function chatRoom(state = initialState, action: ActionReducer) {
+export function chatRoomReducer(state: State = initialState, action: Action) {
   switch (action.type) {
     case SET_CLIENT_USER_DATA:
       return {

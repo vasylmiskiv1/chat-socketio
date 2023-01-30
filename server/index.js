@@ -83,14 +83,15 @@ io.on("connection", (socket) => {
     console.log(chatUsers);
   });
 
-  socket.on("disconnect", () => {
-    console.log(`User Disconnected: ${socket.id}`);
-    chatUsers = chatUsers.filter((chatUser) => chatUser.userId !== socket.id);
-    
-    if (chatUsers.length) {
-      socket.broadcast.emit("someone_disconnected", socket.id);
-    }
+  socket.on("connection_is_broken", () => {
+    console.log(`Connection is broken with user: ${socket.id}`);
+    console.log(chatUsers);
   })
+
+  // socket.on("disconnect", () => {
+  //   console.log(`User Disconnected: ${socket.id}`);
+  //   console.log(chatUsers);
+  // })
 });
 
 server.listen(process.env.SERVER_PORT || 5000, () => {

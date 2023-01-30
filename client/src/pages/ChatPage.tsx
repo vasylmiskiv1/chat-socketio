@@ -18,7 +18,7 @@ export default function ChatPage() {
   const [isOpenSidebar, setIsOpenSidebar] = useState(false);
 
   const { roomId, chatUsers, chatMessages, userData } = useSelector<any, any>(
-    (state) => state.chatRoom
+    (state) => state.chat
   );
 
   const dispatch = useDispatch();
@@ -32,6 +32,10 @@ export default function ChatPage() {
     socket.on("update_room_users", (data) => {
       updateChatUsers(data.chatUsers);
     });
+
+    // return () => {
+    //   socket.emit("connection_is_broken");
+    // }
   }, []);
 
   useEffect(() => {
