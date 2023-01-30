@@ -73,11 +73,24 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("receive_message", data);
   });
 
-  socket.on("disconnect", () => {
+  socket.on("logout", () => {
+    console.log(`User Disconnected: ${socket.id}`);
     chatUsers = chatUsers.filter((chatUser) => chatUser.userId !== socket.id);
 
-    socket.broadcast.emit("someone_disconnected", socket.id);
+    if (chatUsers.length) {
+      socket.broadcast.emit("someone_disconnected", socket.id);
+    }
+    console.log(chatUsers);
   });
+
+  socket.on("disconnect", () => {
+    console.log(`User Disconnected: ${socket.id}`);
+    chatUsers = chatUsers.filter((chatUser) => chatUser.userId !== socket.id);
+    
+    if (chatUsers.length) {
+      socket.broadcast.emit("someone_disconnected", socket.id);
+    }
+  })
 });
 
 server.listen(process.env.SERVER_PORT || 5000, () => {

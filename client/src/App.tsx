@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import Chat from "./pages/Chat";
+import ChatPage from "./pages/ChatPage";
 import StartPage from "./pages/StartPage";
 
 export default function App() {
@@ -7,7 +7,7 @@ export default function App() {
     <>
       <Routes>
         <Route path="/" element={<StartPage />} />
-        <Route path="/chat" element={<Chat />} />
+        <Route path="/chat" element={<ChatPage />} />
       </Routes>
     </>
   );

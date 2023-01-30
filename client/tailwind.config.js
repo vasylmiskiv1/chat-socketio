@@ -4,9 +4,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        "chat-background":
-          "linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(52,52,61,1) 0%, rgba(0,212,255,1) 100%)",
-          "right-sidebar" : "rgba(185, 197, 203, 0.8)",
+        "primary": "#e0fffd",
+        "chat" : "#ccfad7",
+        "chat-messages-field" : "#d6e0dd",
+        "chat-right-sidebar" : "rgba(0, 51, 102, 0.73)",
       },
     },
   },

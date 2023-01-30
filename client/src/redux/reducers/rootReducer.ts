@@ -6,6 +6,7 @@ import {
   UPDATE_CHAT_USERS,
   REMOVE_USER_FROM_CHAT,
   SET_MESSAGE,
+  USER_CLIENT_LOGOUT,
 } from "../constants";
 
 const initialState = {
@@ -15,7 +16,7 @@ const initialState = {
   userData: {},
 };
 
-export function chatRoom(state = initialState, action: any) {
+export function chatRoom(state = initialState, action: ActionReducer) {
   switch (action.type) {
     case SET_CLIENT_USER_DATA:
       return {
@@ -27,10 +28,8 @@ export function chatRoom(state = initialState, action: any) {
     case UPDATE_CLIENT_USER_NAME:
       return {
         ...state,
-        chatUsers: state.chatUsers.map((chatUser: any) =>
-          chatUser.userId === action.payload.userId
-            ? action.payload
-            : chatUser
+        chatUsers: state.chatUsers.map((chatUser: User) =>
+          chatUser.userId === action.payload.userId ? action.payload : chatUser
         ),
         userData: { ...action.payload },
       };
@@ -50,7 +49,7 @@ export function chatRoom(state = initialState, action: any) {
     case UPDATE_CHAT_USERS:
       return {
         ...state,
-        chatUsers: state.chatUsers.map((chatUser: any) =>
+        chatUsers: state.chatUsers.map((chatUser: User) =>
           chatUser.userId === action.payload.userId ? action.payload : chatUser
         ),
       };
@@ -58,8 +57,10 @@ export function chatRoom(state = initialState, action: any) {
     case REMOVE_USER_FROM_CHAT:
       return {
         ...state,
-        chatUsers: state.chatUsers.filter((chatUser: any) => chatUser.userId!== action.payload),
-      }
+        chatUsers: state.chatUsers.filter(
+          (chatUser: User) => chatUser.userId !== action.payload
+        ),
+      };
 
     case SET_MESSAGE:
       return {
@@ -67,6 +68,13 @@ export function chatRoom(state = initialState, action: any) {
         chatMessages: [...state.chatMessages, action.payload],
       };
 
+    case USER_CLIENT_LOGOUT:
+      return {
+        roomId: "",
+        chatUsers: [],
+        chatMessages: [],
+        userData: {},
+      };
     default:
       return state;
   }

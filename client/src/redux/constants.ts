@@ -16,3 +16,6 @@ export const REMOVE_USER_FROM_CHAT = 'REMOVE_USER_FROM_CHAT';
 
 // send a message
 export const SET_MESSAGE = 'SET_MESSAGE';
+
+// user client logoout
+export const USER_CLIENT_LOGOUT = 'USER_CLIENT_LOGOUT';
