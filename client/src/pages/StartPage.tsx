@@ -16,7 +16,6 @@ export default function StartPage() {
   const [room, setRoom] = useState("");
 
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -24,8 +23,10 @@ export default function StartPage() {
       const { roomId, userData, chatUsers } = response;
 
       dispatch(setRoomId(roomId));
-      dispatch(setClientUserData(userData));
       dispatch(getChatUsers(chatUsers));
+      dispatch(setClientUserData(userData));
+
+      localStorage.setItem("socketId", userData.userId);
 
       navigate("/chat");
     });

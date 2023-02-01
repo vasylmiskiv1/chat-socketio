@@ -10,7 +10,7 @@ import {
 } from "../constants";
 
 const initialState: State = {
-  roomId: "1",
+  roomId: "",
   chatUsers: [],
   chatMessages: [],
   userData: {},
@@ -22,7 +22,6 @@ export function chatRoomReducer(state: State = initialState, action: Action) {
       return {
         ...state,
         userData: { ...action.payload },
-        chatUsers: [{ ...action.payload }],
       };
 
     case UPDATE_CLIENT_USER_NAME:

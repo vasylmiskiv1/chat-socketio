@@ -7,7 +7,7 @@ import reportWebVitals from "./reportWebVitals";
 
 import { BrowserRouter } from "react-router-dom";
 
-import store, { persistor } from "./redux/store/initialState";
+import store, { persistor } from "./redux/store/initialStatet";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 

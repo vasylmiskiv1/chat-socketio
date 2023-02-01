@@ -25,21 +25,8 @@ export default function ChatPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!userData.userId) {
-      navigate("/");
-    }
-
-    socket.on("update_room_users", (data) => {
-      updateChatUsers(data.chatUsers);
-    });
-
-    // return () => {
-    //   socket.emit("connection_is_broken");
-    // }
-  }, []);
-
-  useEffect(() => {
     if (socket) {
+      
       socket.on("receive_message", (data: Message) => {
         dispatch(setMessage(data));
       });

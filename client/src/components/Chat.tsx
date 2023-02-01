@@ -57,6 +57,8 @@ export default function Chat({ chatMessages, roomId, userData }: ChatProps) {
   const onLogout = () => {
     socket.emit("logout");
     dispatch(userClientLogout());
+    dispatch({ type: 'persist/purge' });
+    localStorage.removeItem("socketId");
     navigate('/');
   }
 

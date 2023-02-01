@@ -83,11 +83,6 @@ io.on("connection", (socket) => {
     console.log(chatUsers);
   });
 
-  socket.on("connection_is_broken", () => {
-    console.log(`Connection is broken with user: ${socket.id}`);
-    console.log(chatUsers);
-  })
-
   // socket.on("disconnect", () => {
   //   console.log(`User Disconnected: ${socket.id}`);
   //   console.log(chatUsers);
