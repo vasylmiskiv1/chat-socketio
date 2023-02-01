@@ -37,6 +37,7 @@ io.on("connection", (socket) => {
     const userData = { userName: data.userName, userId: socket.id };
 
     chatUsers.push(userData);
+    console.log(userData);
 
     socket.join(data.roomId);
 
@@ -85,6 +86,11 @@ io.on("connection", (socket) => {
 
   // socket.on("disconnect", () => {
   //   console.log(`User Disconnected: ${socket.id}`);
+  //   chatUsers = chatUsers.filter((chatUser) => chatUser.userId !== socket.id);
+
+  //   if (chatUsers.length) {
+  //     socket.broadcast.emit("someone_disconnected", socket.id);
+  //   }
   //   console.log(chatUsers);
   // })
 });

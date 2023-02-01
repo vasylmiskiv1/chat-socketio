@@ -26,7 +26,6 @@ export default function ChatPage() {
 
   useEffect(() => {
     if (socket) {
-      
       socket.on("receive_message", (data: Message) => {
         dispatch(setMessage(data));
       });

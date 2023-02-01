@@ -14,12 +14,13 @@ import { setMessage, userClientLogout } from "../redux/actions/chatActions";
 import { socket } from "../service/socket";
 import { useNavigate } from "react-router-dom";
 
+import chatLogo from "../assets/chat-logo.svg";
+
 export default function Chat({ chatMessages, roomId, userData }: ChatProps) {
   const [writeMessage, setWriteMessage] = useState("");
   const [isOpenEmoji, setIsOpenEmoji] = useState(false);
 
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -58,7 +59,6 @@ export default function Chat({ chatMessages, roomId, userData }: ChatProps) {
     socket.emit("logout");
     dispatch(userClientLogout());
     dispatch({ type: 'persist/purge' });
-    localStorage.removeItem("socketId");
     navigate('/');
   }
 
@@ -69,8 +69,12 @@ export default function Chat({ chatMessages, roomId, userData }: ChatProps) {
         <div>
           Room: <span className="font-bold ">{roomId}</span>
         </div>
+        <div className=" flex gap-5 justify-center items-center">
+          <div className="font-semibold text-lg">Chat</div>
+          <img src={chatLogo} alt="chat" className="w-[30px]"/>
+        </div>
         <div
-          className="flex items-center justify-center gap-2 cursor-pointer hover:scale-95"
+          className="flex items-center justify-center gap-2 cursor-pointer transition-all hover:scale-95 duration-200"
           onClick={onLogout}
         >
           Logout <FiLogOut size={20} />
@@ -79,11 +83,10 @@ export default function Chat({ chatMessages, roomId, userData }: ChatProps) {
       {/* Chat mesages list */}
       <div className="h-[100%] overflow-y-scroll bg-chat-messages-field">
         <div className="px-20 py-5 flex flex-col gap-5">
-          {chatMessages.map((message: Message, i: number) => (
-            <>
+          {chatMessages.length ? chatMessages.map((message: Message, index: number) => (
+            <div key ={index}>
               <div className="relative">
                 <div
-                  key={i}
                   className={`max-w-[400px] w-full rounded-lg p-4 break-words ${
                     message.userId === userData.userId
                       ? `bg-blue-300 ml-auto`
@@ -112,8 +115,8 @@ export default function Chat({ chatMessages, roomId, userData }: ChatProps) {
                 )}
               </div>
               <div ref={messagesEndRef} />
-            </>
-          ))}
+            </div>
+          )) : null}
         </div>
       </div>
       {/* Write a message section */}

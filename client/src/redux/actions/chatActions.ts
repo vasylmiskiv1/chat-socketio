@@ -41,9 +41,8 @@ export function updateChatUsers(user: User) {
   return {
     type: UPDATE_CHAT_USERS,
     payload: user,
-  }
+  };
 }
-
 
 export function setMessage(message: Message) {
   return {
@@ -52,16 +51,15 @@ export function setMessage(message: Message) {
   };
 }
 
-export function removeUserFromChat (userId: string) {
+export function removeUserFromChat(userId: string) {
   return {
     type: REMOVE_USER_FROM_CHAT,
     payload: userId,
-  }
+  };
 }
 
 export function userClientLogout() {
   return {
     type: USER_CLIENT_LOGOUT,
-  }
+  };
 }
-

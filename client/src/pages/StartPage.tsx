@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import startImage from "../assets/start-image.jpg";
 import {
   setRoomId,
   setClientUserData,
   getChatUsers,
+  userClientLogout,
 } from "../redux/actions/chatActions";
 
 import { socket } from "../service/socket";
@@ -18,18 +19,22 @@ export default function StartPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const { userData } = useSelector<any, any>((state) => state.chat);
+
   useEffect(() => {
-    socket.on("joined_room", (response: any) => {
-      const { roomId, userData, chatUsers } = response;
+    if (!userData.userId) {
+      socket.on("joined_room", (response: any) => {
+        const { roomId, userData, chatUsers } = response;
 
-      dispatch(setRoomId(roomId));
-      dispatch(getChatUsers(chatUsers));
-      dispatch(setClientUserData(userData));
+        dispatch(setRoomId(roomId));
+        dispatch(getChatUsers(chatUsers));
+        dispatch(setClientUserData(userData));
 
-      localStorage.setItem("socketId", userData.userId);
+        localStorage.setItem("roomId", userData.userId);
 
-      navigate("/chat");
-    });
+        navigate("/chat");
+      });
+    }
   }, [socket]);
 
   const joinRoom = () => {
@@ -38,8 +43,10 @@ export default function StartPage() {
       roomId: room,
     };
 
-    if (username && room) {
+    if (username && room && !userData.userId) {
       socket.emit("join_room", roomData);
+    } else if (userData.userId) {
+      alert("You are already in a room");
     }
   };
 

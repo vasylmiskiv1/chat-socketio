@@ -1,3 +1,4 @@
+import { RiFileEditLine } from "react-icons/ri";
 import { CgProfile } from "react-icons/cg";
 
 export default function LeftSidebar({
@@ -11,14 +12,17 @@ export default function LeftSidebar({
       <div className="p-4">
         <h1 className="text-lg font-medium">Users</h1>
         <ul className="mt-5 divide-y">
-          <div className="mt-5 py-2 px-10 text-lg flex justify-between gap-5 rounded-lg transition-all font-semibold bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 hover:bg-green-300 duration-200">
+          <div
+            className="mt-5 py-2 px-10 text-lg flex justify-between gap-5 rounded-lg transition-all font-semibold bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-400 hover:to-blue-600 duration-500 cursor-pointer"
+            onClick={() => setIsOpenSidebar(!isOpenSidebar)}
+          >
             {userData.userName}
             <button
               onClick={() => {
                 setIsOpenSidebar(!isOpenSidebar);
               }}
             >
-              <CgProfile />
+              <RiFileEditLine />
             </button>
           </div>
           <hr
@@ -31,19 +35,13 @@ export default function LeftSidebar({
           {chatUsers.map(
             (user: User) =>
               user.userId !== userData.userId && (
-                <li
+                <div
                   key={user.userId}
-                  className={`mt-5 py-2 px-10 text-lg flex justify-between gap-5 rounded-lg transition-all bg-gray-200 hover:bg-gray-300 duration-200`}
+                  className={`mt-5 py-2 px-10 text-lg flex justify-between items-center rounded-lg transition-all bg-gradient-to-r from-green-400 to-gray-200 hover:from-green-400 hover:to-gray-300 duration-200 cursor-pointer`}
                 >
                   <div className="font-semibold">{user.userName}</div>
-                  <button
-                    onClick={() => {
-                      setIsOpenSidebar(!isOpenSidebar);
-                    }}
-                  >
-                    <CgProfile />
-                  </button>
-                </li>
+                  <CgProfile />
+                </div>
               )
           )}
         </ul>

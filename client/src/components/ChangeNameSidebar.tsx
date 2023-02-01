@@ -21,6 +21,7 @@ export default function ChangeNameSidebar({userData, isOpenSidebar, setIsOpenSid
       dispatch(
         updateClientUserName({ userId: userData.userId, userName: changeName })
       );
+      setIsOpenSidebar(false);
     }
   };
   return (
@@ -35,11 +36,11 @@ export default function ChangeNameSidebar({userData, isOpenSidebar, setIsOpenSid
       >
         <IoClose size={30} />
       </div>
-      <div className="mt-20 font-semibold">Your Name: {changeName}</div>
+      <div className="mt-20 text-white text-lg">Your Name: <span className="font-semibold">{changeName}</span></div>
       <input
         type="text"
         value={changeName}
-        className="mt-2 py-2 px-4 rounded-lg"
+        className="mt-10 py-2 px-4 rounded-lg"
         onChange={(e) => {
           setChangeName(e.target.value);
         }}

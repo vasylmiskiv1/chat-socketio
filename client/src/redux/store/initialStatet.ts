@@ -1,10 +1,10 @@
 import { createStore, combineReducers, compose, applyMiddleware } from "redux";
 import { chatRoomReducer } from "../reducers/rootReducer";
-import { persistStore, persistReducer } from "redux-persist"; 
+import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
 const persistConfig = {
-  key: "persist-key",
+  key: "chat",
   storage,
 };
 
@@ -20,4 +20,4 @@ const store = createStore(
 const persistor = persistStore(store);
 
 export default store;
-export {persistor};
+export { persistor };
