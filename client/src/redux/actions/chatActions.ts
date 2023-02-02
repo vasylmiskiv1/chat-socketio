@@ -7,6 +7,7 @@ import {
   GET_CHAT_USERS,
   SET_MESSAGE,
   USER_CLIENT_LOGOUT,
+  SET_IS_LOADED_SOCKET_ID
 } from "../constants";
 
 export function setRoomId(roomId: string) {

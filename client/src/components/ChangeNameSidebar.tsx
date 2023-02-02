@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { IoClose } from "react-icons/io5";
 
 import { updateClientUserName } from "../redux/actions/chatActions";
@@ -12,11 +12,14 @@ export default function ChangeNameSidebar({userData, isOpenSidebar, setIsOpenSid
 
   const dispatch = useDispatch();
 
+  const { roomId } = useSelector<any, any>((state) => state.chat);
+
   const onChangeUserName = async () => {
     if (changeName !== userData.userName) {
-      await socket.emit("change__username", {
+      await socket.emit("change_username", {
         userName: changeName,
         userId: userData.userId,
+        roomId,
       });
       dispatch(
         updateClientUserName({ userId: userData.userId, userName: changeName })

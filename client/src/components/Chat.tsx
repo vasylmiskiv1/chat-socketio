@@ -9,7 +9,10 @@ import { GoTriangleRight } from "react-icons/go";
 import { GoTriangleLeft } from "react-icons/go";
 import { FiLogOut } from "react-icons/fi";
 
-import { setMessage, userClientLogout } from "../redux/actions/chatActions";
+import {
+  setMessage,
+  userClientLogout,
+} from "../redux/actions/chatActions";
 
 import { socket } from "../service/socket";
 import { useNavigate } from "react-router-dom";
@@ -27,6 +30,12 @@ export default function Chat({ chatMessages, roomId, userData }: ChatProps) {
     scrollToBottom();
   }, [chatMessages]);
 
+  useEffect(() => {
+    socket.on("receive_message", (data: Message) => {
+      dispatch(setMessage(data));
+    });
+  }, [socket]);
+
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -35,7 +44,7 @@ export default function Chat({ chatMessages, roomId, userData }: ChatProps) {
     }
   };
 
-  const sendMessage = async (e: any) => {
+  const sendMessage = (e: any) => {
     e.preventDefault();
 
     if (writeMessage) {
@@ -47,20 +56,23 @@ export default function Chat({ chatMessages, roomId, userData }: ChatProps) {
         time: moment().format("lll"),
       };
 
-      await socket.emit("send_message", newMessage);
-
-      dispatch(setMessage(newMessage));
+      socket.emit("send_message", newMessage);
     }
 
     setWriteMessage("");
   };
 
   const onLogout = () => {
-    socket.emit("logout");
+    socket.emit("logout", { userId: userData.userId, roomId });
+
     dispatch(userClientLogout());
-    dispatch({ type: 'persist/purge' });
-    navigate('/');
-  }
+    dispatch({ type: "persist/purge" });
+
+    socket.disconnect();
+    
+    localStorage.setItem("isLoadedSocketId", "");
+    navigate("/");
+  };
 
   return (
     <div className="w-5/6 h-screen flex flex-col">
@@ -71,7 +83,7 @@ export default function Chat({ chatMessages, roomId, userData }: ChatProps) {
         </div>
         <div className=" flex gap-5 justify-center items-center">
           <div className="font-semibold text-lg">Chat</div>
-          <img src={chatLogo} alt="chat" className="w-[30px]"/>
+          <img src={chatLogo} alt="chat" className="w-[30px]" />
         </div>
         <div
           className="flex items-center justify-center gap-2 cursor-pointer transition-all hover:scale-95 duration-200"
@@ -83,40 +95,42 @@ export default function Chat({ chatMessages, roomId, userData }: ChatProps) {
       {/* Chat mesages list */}
       <div className="h-[100%] overflow-y-scroll bg-chat-messages-field">
         <div className="px-20 py-5 flex flex-col gap-5">
-          {chatMessages.length ? chatMessages.map((message: Message, index: number) => (
-            <div key ={index}>
-              <div className="relative">
-                <div
-                  className={`max-w-[400px] w-full rounded-lg p-4 break-words ${
-                    message.userId === userData.userId
-                      ? `bg-blue-300 ml-auto`
-                      : `bg-white`
-                  }  `}
-                >
-                  <div className="flex text-lg gap-4">
-                    <p className="bg-red-200 rounded-full p-1 w-[35px] h-[35px]"></p>
-                    <p className="font-semibold">{message.userName}</p>
+          {chatMessages.length
+            ? chatMessages.map((message: Message, index: number) => (
+                <div key={index}>
+                  <div className="relative">
+                    <div
+                      className={`max-w-[400px] w-full rounded-lg p-4 break-words ${
+                        message.userId === userData.userId
+                          ? `bg-blue-300 ml-auto`
+                          : `bg-white`
+                      }  `}
+                    >
+                      <div className="flex text-lg gap-4">
+                        <p className="bg-red-200 rounded-full p-1 w-[35px] h-[35px]"></p>
+                        <p className="font-semibold">{message.userName}</p>
+                      </div>
+                      <p className="text-gray-800 mt-2 text-base text-left">
+                        {message.message}
+                      </p>
+                      <p className="text-gray-600 text-xs mt-5 text-right">
+                        {message.time}
+                      </p>
+                    </div>
+                    {message.userId === userData.userId ? (
+                      <div className="absolute bottom-[-3px] right-[-21px]">
+                        <GoTriangleRight size={35} color="#93c5fd" />
+                      </div>
+                    ) : (
+                      <div className={`absolute bottom-[-3px] left-[-21px]`}>
+                        <GoTriangleLeft size={35} color="white" />
+                      </div>
+                    )}
                   </div>
-                  <p className="text-gray-800 mt-2 text-base text-left">
-                    {message.message}
-                  </p>
-                  <p className="text-gray-600 text-xs mt-5 text-right">
-                    {message.time}
-                  </p>
+                  <div ref={messagesEndRef} />
                 </div>
-                {message.userId === userData.userId ? (
-                  <div className="absolute bottom-[-3px] right-[-21px]">
-                    <GoTriangleRight size={35} color="#93c5fd" />
-                  </div>
-                ) : (
-                  <div className={`absolute bottom-[-3px] left-[-21px]`}>
-                    <GoTriangleLeft size={35} color="white" />
-                  </div>
-                )}
-              </div>
-              <div ref={messagesEndRef} />
-            </div>
-          )) : null}
+              ))
+            : null}
         </div>
       </div>
       {/* Write a message section */}

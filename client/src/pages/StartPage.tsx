@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import startImage from "../assets/start-image.jpg";
@@ -19,22 +19,35 @@ export default function StartPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { userData } = useSelector<any, any>((state) => state.chat);
+  const { userData, loadedSocketId } = useSelector<any, any>((state) => state.chat);
+
+  const socketId = localStorage.getItem("socketId");
+  const isLoadedSocketId = localStorage.getItem("isLoadedSocketId");
+
+  const location = useLocation();
 
   useEffect(() => {
-    if (!userData.userId) {
-      socket.on("joined_room", (response: any) => {
-        const { roomId, userData, chatUsers } = response;
+    socket.emit("get_socketId");
+    localStorage.setItem("isLoadedSocketId", "true");
+  }, []);
 
-        dispatch(setRoomId(roomId));
-        dispatch(getChatUsers(chatUsers));
-        dispatch(setClientUserData(userData));
-
-        localStorage.setItem("roomId", userData.userId);
-
-        navigate("/chat");
-      });
+  useEffect(() => {
+    if(!isLoadedSocketId) {
+      window.location.reload();
     }
+  }, [loadedSocketId]);
+
+  useEffect(() => {
+    socket.on("send_socketId", (socketId: string) => {
+      localStorage.setItem("socketId", socketId);
+      localStorage.setItem("isLoadedSocketId", "true");
+    });
+
+    socket.on("joined_room", (data: any) => {
+      dispatch(setRoomId(data.roomId));
+      dispatch(getChatUsers(data.roomUsers));
+      dispatch(setClientUserData(data.userData));
+    });
   }, [socket]);
 
   const joinRoom = () => {
@@ -45,8 +58,6 @@ export default function StartPage() {
 
     if (username && room && !userData.userId) {
       socket.emit("join_room", roomData);
-    } else if (userData.userId) {
-      alert("You are already in a room");
     }
   };
 
@@ -72,13 +83,23 @@ export default function StartPage() {
               className="mt-10 w-full px-4 py-2 bg-gray-100 border-2 outline-none border-green-800 rounded transition focus:bg-white duration-300"
               onChange={(e) => setRoom(e.target.value)}
             />
-            <button
-              type="button"
-              className="mt-10 px-4 py-2 bg-green-400 rounded text-white transition hover:bg-green-500 duration-300"
-              onClick={joinRoom}
-            >
-              Join the room
-            </button>
+            <Link to={`/chat/${room}`}>
+              <button
+                type="button"
+                className="mt-10 px-4 py-2 bg-green-400 rounded text-white transition hover:bg-green-500 duration-300"
+                onClick={joinRoom}
+              >
+                Join the room
+              </button>
+            </Link>
+            {/* {!socketId && (
+              <button
+                className={`ml-5 px-4 py-2 rounded bg-purple-300 transition hover:bg-purple-400 duration-300`}
+                onClick={() => window.location.reload()}
+              >
+                Get socketId
+              </button>
+            )} */}
           </div>
         </div>
       </div>

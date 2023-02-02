@@ -10,9 +10,7 @@ export default function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (userData.userId) {
-      navigate("/chat");
-    }
+    localStorage.setItem("isLoadedSocketId", "");
   }, []);
 
   return (
@@ -20,7 +18,7 @@ export default function App() {
       <Routes>
         <Route path="*" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<StartPage />} />
-        <Route path="/chat" element={<ChatPage />} />
+        <Route path="/chat/:id" element={<ChatPage />} />
       </Routes>
     </>
   );

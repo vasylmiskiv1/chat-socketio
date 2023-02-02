@@ -25,16 +25,6 @@ export default function ChatPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (socket) {
-      socket.on("receive_message", (data: Message) => {
-        dispatch(setMessage(data));
-      });
-    }
-
-    socket.on("someone_joined_room", (data: any) => {
-      dispatch(getChatUsers(data.chatUsers));
-    });
-
     socket.on("someone_changed_username", (updatedUser: User) => {
       dispatch(updateChatUsers(updatedUser));
     });

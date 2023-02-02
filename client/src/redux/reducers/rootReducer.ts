@@ -21,7 +21,9 @@ export function chatRoomReducer(state: State = initialState, action: Action) {
     case SET_CLIENT_USER_DATA:
       return {
         ...state,
-        userData: { ...action.payload },
+        userData: !Object.keys(state.userData).length
+          ? { ...action.payload }
+          : state.userData,
       };
 
     case UPDATE_CLIENT_USER_NAME:
@@ -73,6 +75,7 @@ export function chatRoomReducer(state: State = initialState, action: Action) {
         chatUsers: [],
         chatMessages: [],
         userData: {},
+        loadedSocketId: false,
       };
     default:
       return state;
