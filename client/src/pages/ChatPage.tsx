@@ -7,6 +7,7 @@ import {
   removeUserFromChat,
   setMessage,
   updateChatUsers,
+  userClientLogout,
 } from "../redux/actions/chatActions";
 
 import { socket } from "../service/socket";
@@ -23,6 +24,20 @@ export default function ChatPage() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if(!localStorage.getItem("socketId")) {
+    socket.emit("logout", { userId: userData.userId, roomId });
+    dispatch(userClientLogout());
+    dispatch({ type: "persist/purge" });
+
+    socket.disconnect();
+    localStorage.setItem("isLoadedSocketId", "");
+    navigate("/");
+    }
+
+    localStorage.setItem("socketId", "");
+  }, [])
 
   useEffect(() => {
     socket.on("someone_changed_username", (updatedUser: User) => {

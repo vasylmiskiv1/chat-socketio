@@ -27,72 +27,84 @@ const io = new Server(server, {
   },
 });
 
-let chatUsers = [];
+let roomUsers = {};
 
 io.on("connection", (socket) => {
   console.log(`User Connected: ${socket.id}`);
+
+  socket.on("get_socketId", () => {
+    socket.emit("send_socketId", socket.id);
+  });
 
   socket.on("join_room", (data) => {
     console.log(data);
     const userData = { userName: data.userName, userId: socket.id };
 
-    chatUsers.push(userData);
-    console.log(userData);
-
     socket.join(data.roomId);
 
-    socket.emit("joined_room", {
-      roomId: data.roomId,
-      chatUsers,
-      userData,
-    });
+    if (!roomUsers[data.roomId]) {
+      roomUsers[data.roomId] = [];
+    }
 
-    socket.broadcast.emit("someone_joined_room", {
+    roomUsers[data.roomId].push(userData);
+
+    console.log(roomUsers);
+
+    io.to(data.roomId).emit("joined_room", {
+      userData,
       roomId: data.roomId,
-      chatUsers,
+      roomUsers: roomUsers[data.roomId],
     });
   });
 
-  socket.on("change__username", (data) => {
-    chatUsers = [
-      ...chatUsers.map((user) =>
-        user.userId === data.userId
-          ? { ...user, userName: data.userName }
-          : user
-      ),
-    ];
+  socket.on("change_username", (data) => {
+    roomUsers[data.roomId] = roomUsers[data.roomId].map((user) =>
+      user.userId === data.userId ? { ...user, userName: data.userName } : user
+    );
 
     const updatedUser = {
       userId: data.userId,
       userName: data.userName,
     };
 
-    socket.broadcast.emit("someone_changed_username", updatedUser);
+    io.to(data.roomId).emit("someone_changed_username", updatedUser);
+    console.log(roomUsers);
   });
 
   socket.on("send_message", (data) => {
-    socket.broadcast.emit("receive_message", data);
+    // console.log(data);
+    io.to(data.roomId).emit("receive_message", data);
   });
 
-  socket.on("logout", () => {
-    console.log(`User Disconnected: ${socket.id}`);
-    chatUsers = chatUsers.filter((chatUser) => chatUser.userId !== socket.id);
-
-    if (chatUsers.length) {
-      socket.broadcast.emit("someone_disconnected", socket.id);
+  socket.on("logout", (data) => {
+    console.log(data);
+    if (roomUsers[data.roomId]) {
+      roomUsers[data.roomId] = roomUsers[data.roomId].filter(
+        (user) => user.userId !== data.userId
+      );
     }
-    console.log(chatUsers);
+
+    if (roomUsers[data.roomId] && roomUsers[data.roomId].length) {
+      io.to(data.roomId).emit("someone_disconnected", data.userId);
+    } else {
+      delete roomUsers[data.roomId];
+    }
+    console.log(roomUsers);
   });
 
-  // socket.on("disconnect", () => {
-  //   console.log(`User Disconnected: ${socket.id}`);
-  //   chatUsers = chatUsers.filter((chatUser) => chatUser.userId !== socket.id);
+  socket.on("disconnect", () => {
+    console.log(`User Disconnected: ${socket.id}`);
 
-  //   if (chatUsers.length) {
-  //     socket.broadcast.emit("someone_disconnected", socket.id);
-  //   }
-  //   console.log(chatUsers);
-  // })
+    for (const room in roomUsers) {
+      for (let i = 0; i < roomUsers[room].length; i++) {
+        if (roomUsers[room][i].userId === socket.id) {
+          socket.leave(room);
+          io.to(room).emit("someone_disconnected", socket.id);
+          roomUsers[room].splice(i, 1);
+        }
+      }
+    }
+  });
 });
 
 server.listen(process.env.SERVER_PORT || 5000, () => {

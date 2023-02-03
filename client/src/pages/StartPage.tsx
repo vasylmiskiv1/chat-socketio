@@ -27,6 +27,8 @@ export default function StartPage() {
   const location = useLocation();
 
   useEffect(() => {
+    dispatch(userClientLogout());
+    dispatch({ type: "persist/purge" });
     socket.emit("get_socketId");
     localStorage.setItem("isLoadedSocketId", "true");
   }, []);
@@ -92,14 +94,6 @@ export default function StartPage() {
                 Join the room
               </button>
             </Link>
-            {/* {!socketId && (
-              <button
-                className={`ml-5 px-4 py-2 rounded bg-purple-300 transition hover:bg-purple-400 duration-300`}
-                onClick={() => window.location.reload()}
-              >
-                Get socketId
-              </button>
-            )} */}
           </div>
         </div>
       </div>

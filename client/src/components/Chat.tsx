@@ -69,7 +69,6 @@ export default function Chat({ chatMessages, roomId, userData }: ChatProps) {
     dispatch({ type: "persist/purge" });
 
     socket.disconnect();
-    
     localStorage.setItem("isLoadedSocketId", "");
     navigate("/");
   };

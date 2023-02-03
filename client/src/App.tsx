@@ -3,15 +3,10 @@ import { useSelector } from "react-redux";
 import { Route, Routes, useNavigate, Navigate } from "react-router-dom";
 import ChatPage from "./pages/ChatPage";
 import StartPage from "./pages/StartPage";
+import { userClientLogout } from "./redux/actions/chatActions";
 
 export default function App() {
   const { userData } = useSelector<any, any>((state) => state.chat);
-
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    localStorage.setItem("isLoadedSocketId", "");
-  }, []);
 
   return (
     <>
