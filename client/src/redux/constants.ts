@@ -19,6 +19,3 @@ export const SET_MESSAGE = "SET_MESSAGE";
 
 // user client logoout
 export const USER_CLIENT_LOGOUT = "USER_CLIENT_LOGOUT";
-
-// set socket id
-export const SET_IS_LOADED_SOCKET_ID = "SET_IS_LOADED_SOCKET_ID";

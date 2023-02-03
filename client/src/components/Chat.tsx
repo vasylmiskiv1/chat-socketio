@@ -9,10 +9,7 @@ import { GoTriangleRight } from "react-icons/go";
 import { GoTriangleLeft } from "react-icons/go";
 import { FiLogOut } from "react-icons/fi";
 
-import {
-  setMessage,
-  userClientLogout,
-} from "../redux/actions/chatActions";
+import { setMessage, userClientLogout } from "../redux/actions/chatActions";
 
 import { socket } from "../service/socket";
 import { useNavigate } from "react-router-dom";
@@ -44,7 +41,7 @@ export default function Chat({ chatMessages, roomId, userData }: ChatProps) {
     }
   };
 
-  const sendMessage = (e: any) => {
+  const sendMessage = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
 
     if (writeMessage) {
@@ -74,14 +71,14 @@ export default function Chat({ chatMessages, roomId, userData }: ChatProps) {
   };
 
   return (
-    <div className="w-5/6 h-screen flex flex-col">
+    <div className="max-lg:w-full w-5/6 h-screen flex flex-col">
       {/* Header */}
-      <div className="mt-top py-4 flex-start bg-green-400 flex justify-between px-20 items-center">
+      <div className="mt-top py-4 flex-start bg-green-400 flex justify-between max-md:px-5 px-20 items-center">
         <div>
           Room: <span className="font-bold ">{roomId}</span>
         </div>
         <div className=" flex gap-5 justify-center items-center">
-          <div className="font-semibold text-lg">Chat</div>
+          <div className="text-lg">Live<span className="font-semibold">Chat</span></div>
           <img src={chatLogo} alt="chat" className="w-[30px]" />
         </div>
         <div
@@ -134,7 +131,7 @@ export default function Chat({ chatMessages, roomId, userData }: ChatProps) {
       </div>
       {/* Write a message section */}
       <div className="mt-auto w-full grow-1 bg-chat-messages-field">
-        <form className="py-4 h-full left-0 right-0 flex m-auto px-10 justify-center items-center gap-5 max-w-[800px]">
+        <form className="py-4 h-full left-0 right-0 flex m-auto max-md:px-5 px-10 justify-center items-center gap-5 max-w-[800px]">
           <div className="bg-white w-full flex rounded-lg">
             <div
               className="flex justify-center items-center p-4 cursor-pointer"

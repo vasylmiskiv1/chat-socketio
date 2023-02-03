@@ -1,13 +1,8 @@
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { Route, Routes, useNavigate, Navigate } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import ChatPage from "./pages/ChatPage";
 import StartPage from "./pages/StartPage";
-import { userClientLogout } from "./redux/actions/chatActions";
 
 export default function App() {
-  const { userData } = useSelector<any, any>((state) => state.chat);
-
   return (
     <>
       <Routes>

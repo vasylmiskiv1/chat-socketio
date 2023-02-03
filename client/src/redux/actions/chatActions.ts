@@ -7,7 +7,6 @@ import {
   GET_CHAT_USERS,
   SET_MESSAGE,
   USER_CLIENT_LOGOUT,
-  SET_IS_LOADED_SOCKET_ID
 } from "../constants";
 
 export function setRoomId(roomId: string) {
@@ -17,10 +16,10 @@ export function setRoomId(roomId: string) {
   };
 }
 
-export function setClientUserData(username: string) {
+export function setClientUserData(userData: UserData) {
   return {
     type: SET_CLIENT_USER_DATA,
-    payload: username,
+    payload: userData,
   };
 }
 

@@ -6,8 +6,11 @@ import { updateClientUserName } from "../redux/actions/chatActions";
 
 import { socket } from "../service/socket";
 
-export default function ChangeNameSidebar({userData, isOpenSidebar, setIsOpenSidebar}: ChangeNameSidebarProps) {
-
+export default function ChangeNameSidebar({
+  userData,
+  isOpenSidebar,
+  setIsOpenSidebar,
+}: ChangeNameSidebarProps) {
   const [changeName, setChangeName] = useState(userData.userName);
 
   const dispatch = useDispatch();
@@ -39,7 +42,9 @@ export default function ChangeNameSidebar({userData, isOpenSidebar, setIsOpenSid
       >
         <IoClose size={30} />
       </div>
-      <div className="mt-20 text-white text-lg">Your Name: <span className="font-semibold">{changeName}</span></div>
+      <div className="mt-20 text-white text-lg">
+        Your Name: <span className="font-semibold">{changeName}</span>
+      </div>
       <input
         type="text"
         value={changeName}

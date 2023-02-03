@@ -8,7 +8,7 @@ export default function LeftSidebar({
   isOpenSidebar,
 }: UserSidebarProps) {
   return (
-    <div className="w-1/6 h-screen overflow-y-scroll bg-green-400 pb-5">
+    <div className="max-lg:hidden w-1/6 h-screen overflow-y-scroll bg-green-400 pb-5">
       <div className="p-4">
         <h1 className="text-lg font-medium">Users</h1>
         <ul className="mt-5 divide-y">

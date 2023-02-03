@@ -1,8 +1,13 @@
+interface UserData {
+  userId?: string;
+  userName?: string;
+}
+
 interface State {
   roomId: string;
   chatUsers: User[];
   chatMessages: Message[];
-  userData: {};
+  userData: UserData;
 }
 
 interface Action {
@@ -22,6 +27,14 @@ interface Message {
   roomId: string;
   time: string;
 }
+
+interface joinedRoomData {
+  roomId: string;
+  userData: UserData;
+  roomUsers: User[];
+}
+
+// Components properties
 
 type UserSidebarProps = {
   userData: User;

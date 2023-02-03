@@ -3,9 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import {
-  getChatUsers,
   removeUserFromChat,
-  setMessage,
   updateChatUsers,
   userClientLogout,
 } from "../redux/actions/chatActions";
@@ -26,18 +24,18 @@ export default function ChatPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if(!localStorage.getItem("socketId")) {
-    socket.emit("logout", { userId: userData.userId, roomId });
-    dispatch(userClientLogout());
-    dispatch({ type: "persist/purge" });
+    if (!localStorage.getItem("socketId")) {
+      socket.emit("logout", { userId: userData.userId, roomId });
+      dispatch(userClientLogout());
+      dispatch({ type: "persist/purge" });
 
-    socket.disconnect();
-    localStorage.setItem("isLoadedSocketId", "");
-    navigate("/");
+      socket.disconnect();
+      localStorage.setItem("isLoadedSocketId", "");
+      navigate("/");
     }
 
     localStorage.setItem("socketId", "");
-  }, [])
+  }, []);
 
   useEffect(() => {
     socket.on("someone_changed_username", (updatedUser: User) => {

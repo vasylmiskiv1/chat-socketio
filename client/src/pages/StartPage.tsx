@@ -16,15 +16,13 @@ export default function StartPage() {
   const [username, setUsername] = useState("");
   const [room, setRoom] = useState("");
 
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { userData, loadedSocketId } = useSelector<any, any>((state) => state.chat);
+  const { userData, loadedSocketId } = useSelector<any, any>(
+    (state) => state.chat
+  );
 
-  const socketId = localStorage.getItem("socketId");
   const isLoadedSocketId = localStorage.getItem("isLoadedSocketId");
-
-  const location = useLocation();
 
   useEffect(() => {
     dispatch(userClientLogout());
@@ -34,7 +32,7 @@ export default function StartPage() {
   }, []);
 
   useEffect(() => {
-    if(!isLoadedSocketId) {
+    if (!isLoadedSocketId) {
       window.location.reload();
     }
   }, [loadedSocketId]);
@@ -45,7 +43,7 @@ export default function StartPage() {
       localStorage.setItem("isLoadedSocketId", "true");
     });
 
-    socket.on("joined_room", (data: any) => {
+    socket.on("joined_room", (data: joinedRoomData) => {
       dispatch(setRoomId(data.roomId));
       dispatch(getChatUsers(data.roomUsers));
       dispatch(setClientUserData(data.userData));
@@ -66,8 +64,8 @@ export default function StartPage() {
   return (
     <>
       <div className="flex basis-0">
-        <img src={startImage} alt="start" className="h-screen w-full" />
-        <div className="w-full py-40 px-20 text-center flex flex-col items-center">
+        <img src={startImage} alt="start" className="max-xl:hidden h-screen w-full" />
+        <div className="w-full max-xl:px-5 py-20 py-40 px-20 text-center flex flex-col items-center">
           <h1 className="text-4xl text-green-800 font-bold">
             Welcome to the Live Chat
           </h1>
