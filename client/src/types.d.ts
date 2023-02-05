@@ -40,9 +40,7 @@ type UserSidebarProps = {
   userData: User;
   chatUsers: User[];
   screenWidth: number;
-  isOpenChangeNameSidebar: boolean;
   isOpenUserListSidebar: boolean;
-  setIsOpenChangeNameSidebar: (value: boolean) => void;
   setIsOpenUserListSidebar: (value: boolean) => void;
 }
 

@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import EmojiPicker from "emoji-picker-react";
 import { useDispatch } from "react-redux";
 import moment from "moment";
-import { useWindowWidth } from "@react-hook/window-size/throttled";
 
 import { BiMailSend } from "react-icons/bi";
 import { FaRegSmileBeam } from "react-icons/fa";

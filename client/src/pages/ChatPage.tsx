@@ -11,11 +11,9 @@ import {
 import { socket } from "../service/socket";
 import UserListSidebar from "../components/UserListSidebar";
 import Chat from "../components/Chat";
-import ChangeNameSidebar from "../components/ChangeNameSidebar";
 import { useWindowWidth } from "@react-hook/window-size";
 
 export default function ChatPage() {
-  const [isOpenChangeNameSidebar, setIsOpenChangeNameSidebar] = useState(false);
   const [isOpenUserListSidebar, setIsOpenUserListSidebar] = useState(false);
 
   const { roomId, chatUsers, chatMessages, userData } = useSelector<any, any>(
@@ -54,15 +52,13 @@ export default function ChatPage() {
   return (
     <>
       <div className="flex h-full text-center">
-        {/* Left sidebar */}
+        {/* User list sidebar */}
         <UserListSidebar
           userData={userData}
           chatUsers={chatUsers}
           screenWidth={screenWidth}
           isOpenUserListSidebar={isOpenUserListSidebar}
           setIsOpenUserListSidebar={setIsOpenUserListSidebar}
-          isOpenChangeNameSidebar={isOpenChangeNameSidebar}
-          setIsOpenChangeNameSidebar={setIsOpenChangeNameSidebar}
         />
         {/* Chat */}
         <Chat
@@ -72,12 +68,6 @@ export default function ChatPage() {
           screenWidth={screenWidth}
           isOpenUserListSidebar={isOpenUserListSidebar}
           setIsOpenUserListSidebar={setIsOpenUserListSidebar}
-        />
-        {/* Right sidebar */}
-        <ChangeNameSidebar
-          userData={userData}
-          isOpenChangeNameSidebar={isOpenChangeNameSidebar}
-          setIsOpenChangeNameSidebar={setIsOpenChangeNameSidebar}
         />
       </div>
     </>
