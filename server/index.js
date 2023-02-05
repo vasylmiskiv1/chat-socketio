@@ -30,14 +30,14 @@ const io = new Server(server, {
 let roomUsers = {};
 
 io.on("connection", (socket) => {
-  console.log(`User Connected: ${socket.id}`);
+  // console.log(`User Connected: ${socket.id}`);
 
   socket.on("get_socketId", () => {
     socket.emit("send_socketId", socket.id);
   });
 
   socket.on("join_room", (data) => {
-    console.log(data);
+    // console.log(data);
     const userData = { userName: data.userName, userId: socket.id };
 
     socket.join(data.roomId);
@@ -48,7 +48,7 @@ io.on("connection", (socket) => {
 
     roomUsers[data.roomId].push(userData);
 
-    console.log(roomUsers);
+    // console.log(roomUsers);
 
     io.to(data.roomId).emit("joined_room", {
       userData,
@@ -68,7 +68,7 @@ io.on("connection", (socket) => {
     };
 
     io.to(data.roomId).emit("someone_changed_username", updatedUser);
-    console.log(roomUsers);
+    // console.log(roomUsers);
   });
 
   socket.on("send_message", (data) => {
@@ -77,7 +77,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("logout", (data) => {
-    console.log(data);
+    // console.log(data);
     if (roomUsers[data.roomId]) {
       roomUsers[data.roomId] = roomUsers[data.roomId].filter(
         (user) => user.userId !== data.userId
@@ -89,11 +89,11 @@ io.on("connection", (socket) => {
     } else {
       delete roomUsers[data.roomId];
     }
-    console.log(roomUsers);
+    // console.log(roomUsers);
   });
 
   socket.on("disconnect", () => {
-    console.log(`User Disconnected: ${socket.id}`);
+    // console.log(`User Disconnected: ${socket.id}`);
 
     for (const room in roomUsers) {
       for (let i = 0; i < roomUsers[room].length; i++) {

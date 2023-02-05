@@ -63,9 +63,9 @@ export default function StartPage() {
 
   return (
     <>
-      <div className="flex basis-0">
+      <div className="flex h-screen basis-0">
         <img src={startImage} alt="start" className="max-xl:hidden h-screen w-full" />
-        <div className="w-full max-xl:px-5 py-20 py-40 px-20 text-center flex flex-col items-center">
+        <div className="w-full max-xl:px-5 px-20 text-center flex flex-col justify-center items-center">
           <h1 className="text-4xl text-green-800 font-bold">
             Welcome to the Live Chat
           </h1>

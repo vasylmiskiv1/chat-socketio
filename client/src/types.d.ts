@@ -39,18 +39,24 @@ interface joinedRoomData {
 type UserSidebarProps = {
   userData: User;
   chatUsers: User[];
-  setIsOpenSidebar: (value: boolean) => void;
-  isOpenSidebar: boolean;
+  screenWidth: number;
+  isOpenChangeNameSidebar: boolean;
+  isOpenUserListSidebar: boolean;
+  setIsOpenChangeNameSidebar: (value: boolean) => void;
+  setIsOpenUserListSidebar: (value: boolean) => void;
 }
 
 type ChatProps = {
   chatMessages: Message[];
   roomId: string,
   userData: User;
+  screenWidth: number;
+  isOpenUserListSidebar: boolean;
+  setIsOpenUserListSidebar: (value: boolean) => void;
 }
 
 type ChangeNameSidebarProps = {
   userData: User;
-  isOpenSidebar: boolean;
-  setIsOpenSidebar: (value: boolean) => void;
+  isOpenChangeNameSidebar: boolean;
+  setIsOpenChangeNameSidebar: (value: boolean) => void;
 }

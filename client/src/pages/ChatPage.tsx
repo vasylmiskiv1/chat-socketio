@@ -12,9 +12,11 @@ import { socket } from "../service/socket";
 import UserListSidebar from "../components/UserListSidebar";
 import Chat from "../components/Chat";
 import ChangeNameSidebar from "../components/ChangeNameSidebar";
+import { useWindowWidth } from "@react-hook/window-size";
 
 export default function ChatPage() {
-  const [isOpenSidebar, setIsOpenSidebar] = useState(false);
+  const [isOpenChangeNameSidebar, setIsOpenChangeNameSidebar] = useState(false);
+  const [isOpenUserListSidebar, setIsOpenUserListSidebar] = useState(false);
 
   const { roomId, chatUsers, chatMessages, userData } = useSelector<any, any>(
     (state) => state.chat
@@ -22,6 +24,8 @@ export default function ChatPage() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const screenWidth = useWindowWidth();
 
   useEffect(() => {
     if (!localStorage.getItem("socketId")) {
@@ -54,16 +58,26 @@ export default function ChatPage() {
         <UserListSidebar
           userData={userData}
           chatUsers={chatUsers}
-          setIsOpenSidebar={setIsOpenSidebar}
-          isOpenSidebar={isOpenSidebar}
+          screenWidth={screenWidth}
+          isOpenUserListSidebar={isOpenUserListSidebar}
+          setIsOpenUserListSidebar={setIsOpenUserListSidebar}
+          isOpenChangeNameSidebar={isOpenChangeNameSidebar}
+          setIsOpenChangeNameSidebar={setIsOpenChangeNameSidebar}
         />
         {/* Chat */}
-        <Chat chatMessages={chatMessages} roomId={roomId} userData={userData} />
+        <Chat
+          chatMessages={chatMessages}
+          roomId={roomId}
+          userData={userData}
+          screenWidth={screenWidth}
+          isOpenUserListSidebar={isOpenUserListSidebar}
+          setIsOpenUserListSidebar={setIsOpenUserListSidebar}
+        />
         {/* Right sidebar */}
         <ChangeNameSidebar
           userData={userData}
-          isOpenSidebar={isOpenSidebar}
-          setIsOpenSidebar={setIsOpenSidebar}
+          isOpenChangeNameSidebar={isOpenChangeNameSidebar}
+          setIsOpenChangeNameSidebar={setIsOpenChangeNameSidebar}
         />
       </div>
     </>

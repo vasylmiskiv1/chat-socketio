@@ -8,8 +8,8 @@ import { socket } from "../service/socket";
 
 export default function ChangeNameSidebar({
   userData,
-  isOpenSidebar,
-  setIsOpenSidebar,
+  isOpenChangeNameSidebar,
+  setIsOpenChangeNameSidebar,
 }: ChangeNameSidebarProps) {
   const [changeName, setChangeName] = useState(userData.userName);
 
@@ -27,18 +27,18 @@ export default function ChangeNameSidebar({
       dispatch(
         updateClientUserName({ userId: userData.userId, userName: changeName })
       );
-      setIsOpenSidebar(false);
+      setIsOpenChangeNameSidebar(false);
     }
   };
   return (
     <div
       className={`fixed h-screen p-4 w-1/6 bg-chat-right-sidebar right-0 flex flex-col ${
-        isOpenSidebar ? "block" : "hidden"
+        isOpenChangeNameSidebar ? "block" : "hidden"
       }`}
     >
       <div
         className="ml-auto cursor-pointer"
-        onClick={() => setIsOpenSidebar(false)}
+        onClick={() => setIsOpenChangeNameSidebar(false)}
       >
         <IoClose size={30} />
       </div>
