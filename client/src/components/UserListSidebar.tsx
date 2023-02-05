@@ -1,12 +1,14 @@
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import { RiFileEditLine } from "react-icons/ri";
 import { CgProfile } from "react-icons/cg";
 import { IoClose, IoReturnDownBack } from "react-icons/io5";
 import { FiUserCheck } from "react-icons/fi";
 
-import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
-import { socket } from "../service/socket";
 import { updateClientUserName } from "../redux/actions/chatActions";
+
+import { socket } from "../service/socket";
 
 export default function LeftSidebar({
   userData,

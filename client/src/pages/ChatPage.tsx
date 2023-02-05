@@ -37,6 +37,7 @@ export default function ChatPage() {
     }
 
     localStorage.setItem("socketId", "");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -47,6 +48,7 @@ export default function ChatPage() {
     socket.on("someone_disconnected", (userId: string) => {
       dispatch(removeUserFromChat(userId));
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket]);
 
   return (

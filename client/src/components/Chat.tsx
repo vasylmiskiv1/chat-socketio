@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import EmojiPicker from "emoji-picker-react";
 import { useDispatch } from "react-redux";
 import moment from "moment";
 
@@ -26,7 +25,6 @@ export default function Chat({
   isOpenUserListSidebar,
 }: ChatProps) {
   const [writeMessage, setWriteMessage] = useState("");
-  const [isOpenEmoji, setIsOpenEmoji] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -111,13 +109,19 @@ export default function Chat({
       </div>
       {/* Chat mesages list */}
       <div className="h-[100%] overflow-y-scroll bg-chat-messages-field">
-        <div className={`${screenWidth < 1024 ? `px-8` : `px-20`} py-5 flex flex-col gap-5`}>
+        <div
+          className={`${
+            screenWidth < 1024 ? `px-8` : `px-20`
+          } py-5 flex flex-col gap-5`}
+        >
           {chatMessages.length
             ? chatMessages.map((message: Message, index: number) => (
                 <div key={index}>
                   <div className="relative">
                     <div
-                      className={`${screenWidth < 1024 ? `max-w-[280px]` : `max-w-[400px]`} w-full rounded-lg p-4 break-words overflow-hidden ${
+                      className={`${
+                        screenWidth < 1024 ? `max-w-[280px]` : `max-w-[400px]`
+                      } w-full rounded-lg p-4 break-words overflow-hidden ${
                         message.userId === userData.userId
                           ? `bg-blue-300 ml-auto`
                           : `bg-white`
@@ -156,7 +160,6 @@ export default function Chat({
           <div className="bg-white w-full flex rounded-lg">
             <div
               className="flex justify-center items-center p-4 cursor-pointer"
-              onClick={() => setIsOpenEmoji(!isOpenEmoji)}
             >
               <FaRegSmileBeam size={20} />
             </div>
@@ -168,11 +171,7 @@ export default function Chat({
               onChange={(e) => setWriteMessage(e.target.value)}
             />
           </div>
-          {/* {isOpenEmoji && (
-                <div className="absolute bottom-14">
-                  <EmojiPicker />
-                </div>
-              )} */}
+          {/* {showPicker && <Picker data={data} onEmojiSelect={console.log} />} */}
           <button
             className="bg-blue-400 text-white max-lg:w-[60px] w-[55px] h-[50px] flex justify-center items-center rounded-full hover:bg-blue-500"
             type="submit"

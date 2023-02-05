@@ -29,12 +29,14 @@ export default function StartPage() {
     dispatch({ type: "persist/purge" });
     socket.emit("get_socketId");
     localStorage.setItem("isLoadedSocketId", "true");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (!isLoadedSocketId) {
       window.location.reload();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadedSocketId]);
 
   useEffect(() => {
@@ -48,6 +50,7 @@ export default function StartPage() {
       dispatch(getChatUsers(data.roomUsers));
       dispatch(setClientUserData(data.userData));
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket]);
 
   const joinRoom = () => {
